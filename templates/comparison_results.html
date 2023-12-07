@@ -2,33 +2,98 @@
 {% block content %}
 
 <section class="weather-form">
-    {# 
-        TODO: Replace the hard-coded cities and date below with data from the 
-        server.
-    #}
-    <h1>Weather in [CITY1] and [CITY2]</h1>
-    <p>[TODAYS_DATE]</p>
+    <h1>Weather in {{ city_1_info['city'] }} and {{ city_2_info['city'] }}</h1>
+    <p>{{ date.strftime("%A, %B %d, %Y") }}</p>
 
+    <!-- Weather Information for City 1 -->
+    <section>
+        <h2>Weather in {{ city_1_info['city'] }}</h2>
+        <ul>
+            <li>Temperature: {{ city_1_info['temp'] }} {{ city_1_info['units_letter'] }} </li>
+            <li>Description: {{ city_1_info['description'] }} </li>
+            <li>Humidity: {{ city_1_info['humidity'] }} % </li>
+            <li>Wind speed: {{ city_1_info['wind_speed'] }} miles/hour </li>
+            <li>Sunrise: {{ city_1_info['sunrise'].strftime("%H:%M:%S") }} </li>
+            <li>Sunset: {{ city_1_info['sunset'].strftime("%H:%M:%S") }} </li>
+        </ul>
+    </section>
 
-    {#
-        TODO: Add the temperature, description, and min & max temperature below.
-        Replace 'F' with the appropriate units.
-    #}
-    <p>
-        It is [NUM_DEGREES] [UNITS] [WARMER/COLDER] in [CITY1] than in [CITY2] today.
-    </p>
+    <!-- Weather Information for City 2 -->
+    <section>
+        <h2>Weather in {{ city_2_info['city'] }}</h2>
+        <ul>
+            <li>Temperature: {{ city_2_info['temp'] }} {{ city_2_info['units_letter'] }} </li>
+            <li>Description: {{ city_2_info['description'] }} </li>
+            <li>Humidity: {{ city_2_info['humidity'] }} % </li>
+            <li>Wind speed: {{ city_2_info['wind_speed'] }} miles/hour </li>
+            <li>Sunrise: {{ city_2_info['sunrise'].strftime("%H:%M:%S") }} </li>
+            <li>Sunset: {{ city_2_info['sunset'].strftime("%H:%M:%S") }} </li>
+        </ul>
+    </section>
 
-    <p>
-        The humidity in [CITY1] is [AMOUNT] [GREATER/LESS] than in [CITY2].
-    </p>
+    <!-- Temperature Comparison -->
+    <h3> Temperature Comparison </h3>
+    {% if city_1_info['temp'] > city_2_info['temp'] %}
+        <p>
+            It is {{ ((city_1_info['temp'] - city_2_info['temp'])|float)|round(2) }} {{ city_1_info['units_letter'] }} WARMER in {{ city_1_info['city'] }} than in {{ city_2_info['city'] }} today.
+        </p>
+    {% elif city_1_info['temp'] < city_2_info['temp'] %}
+        <p>
+            It is {{ ((city_2_info['temp'] - city_1_info['temp'])|float)|round(2) }} {{ city_1_info['units_letter'] }} COLDER in {{ city_1_info['city'] }} than in {{ city_2_info['city'] }} today.
+        </p>
+    {% else %}
+        <p>
+            It is the same temperature in {{ city_1_info['city'] }} and {{ city_2_info['city'] }} today!
+        </p>
+    {% endif %}
 
-    <p>
-        The wind speed in [CITY1] is [AMOUNT] [GREATER/LESS] than in [CITY2].
-    </p>
+    <!-- Humidity Comparison -->
+    <h3> Humidity Comparison </h3>
+    {% if city_1_info['humidity'] > city_2_info['humidity'] %}
+        <p>
+            The humidity in {{ city_1_info['city'] }} is {{ ((city_1_info['humidity'] - city_2_info['humidity'])|float)|round(2) }} percentage points GREATER than in {{ city_2_info['city'] }}.
+        </p>
+    {% elif city_1_info['humidity'] < city_2_info['humidity'] %}
+        <p>
+            The humidity in {{ city_1_info['city'] }} is {{ ((city_2_info['humidity'] - city_1_info['humidity'])|float)|round(2) }} percentage points LESS than in {{ city_2_info['city'] }}.
+        </p>
+    {% else %}
+        <p>
+            The humidity is the same in {{ city_1_info['city'] }} and {{ city_2_info['city'] }} today!
+        </p>
+    {% endif %}
 
-    <p>
-        The sun sets in [CITY1] [HOURS] hours [EARLIER/LATER] than in [CITY2].
-    </p>
+    <!-- Wind Speed Comparison -->
+    <h3> Wind Speed Comparison </h3>
+    {% if city_1_info['wind_speed'] > city_2_info['wind_speed'] %}
+        <p>
+            The wind speed in {{ city_1_info['city'] }} is {{ ((city_1_info['wind_speed'] - city_2_info['wind_speed'])|float)|round(2) }} miles/hour GREATER than in {{ city_2_info['city'] }}.
+        </p>
+    {% elif city_1_info['wind_speed'] < city_2_info['wind_speed'] %}
+        <p>
+            The wind speed in {{ city_1_info['city'] }} is {{ ((city_2_info['wind_speed'] - city_1_info['wind_speed'])|float)|round(2) }} miles/hour LESS than in {{ city_2_info['city'] }}.
+        </p>
+    {% else %}
+        <p>
+            The wind-speed is the same in {{ city_1_info['city'] }} and {{ city_2_info['city'] }} today!
+        </p>
+    {% endif %}
+
+    <!-- Sunset Comparison -->
+    <h3> Sunset Comparison </h3>
+    {% if city_1_info['sunset'] > city_2_info['sunset'] %}
+        <p>
+            The sun sets in {{ city_2_info['city'] }} {{ ((city_1_info['sunset'] - city_2_info['sunset']).total_seconds() / 60)|int }} minutes EARLIER than in {{ city_1_info['city'] }}.
+        </p>
+    {% elif city_1_info['sunset'] < city_2_info['sunset'] %}
+        <p>
+            The sun sets in {{ city_1_info['city'] }} {{ ((city_2_info['sunset'] - city_1_info['sunset']).total_seconds() / 60)|int }} minutes EARLIER than in {{ city_2_info['city'] }}.
+        </p>
+    {% else %}
+        <p>
+            The sun sets at the same time in {{ city_1_info['city'] }} and {{ city_2_info['city'] }} today!
+        </p>
+    {% endif %}
     
 </section>
 
